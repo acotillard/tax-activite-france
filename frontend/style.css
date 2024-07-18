@@ -2,11 +2,22 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
+    background-color: #d3d3d3; /* Fond gris foncé pour toute la page */
+}
+
+#map-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
 }
 
 #map {
     width: 100%;
-    height: 100vh;
+    max-width: 960px;
+    height: 80vh;
+    background-color: transparent; /* Fond transparent pour la carte */
 }
 
 .region {
