@@ -15,7 +15,7 @@ app.get('/regions', (req, res) => {
 // Endpoint pour obtenir les activités et taxes d'une région spécifique
 app.get('/regions/:id/details', (req, res) => {
     const details = db.prepare(`
-        SELECT a.name AS activity, t.name AS tax_name, t.rate
+        SELECT a.name AS activity, t.rate
         FROM Activities a
         JOIN Taxes t ON a.id = t.activity_id
         WHERE t.region_id = ?

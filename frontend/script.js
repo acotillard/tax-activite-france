@@ -28,7 +28,7 @@ const initMap = () => {
     // Fonction pour formater les détails des activités et taxes
     const formatDetails = (details) => {
         return details.map(detail => {
-            return `${detail.activity}: ${detail.tax_name} - ${detail.rate}%`;
+            return `${detail.activity}: ${detail.rate}%`;
         }).join('<br>');
     };
 
