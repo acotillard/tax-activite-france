@@ -47,16 +47,30 @@ const initMap = () => {
             .style("stroke", "#ffffff")
             .style("stroke-width", "1.5")
             .on("mouseover", async function(event, d) {
-                d3.select(this).style("fill-opacity", 0.7);
+                d3.select(this).style("stroke", "#FFD700").style("stroke-width", "3");
+
                 try {
                     const regionId = data.features.findIndex(feature => feature.properties.NAME_1 === d.properties.NAME_1) + 1;
                     const detailsResponse = await fetch(`/regions/${regionId}/details`);
                     const details = await detailsResponse.json();
                     const formattedDetails = formatDetails(details);
-                    
+
+                    // Calculer la position de l'infobulle pour qu'elle reste toujours visible
+                    let tooltipX = event.pageX + 15;
+                    let tooltipY = event.pageY - 28;
+                    const tooltipWidth = 200; // Largeur estimée de l'infobulle
+                    const tooltipHeight = 100; // Hauteur estimée de l'infobulle
+
+                    if (tooltipX + tooltipWidth > window.innerWidth) {
+                        tooltipX = event.pageX - tooltipWidth - 15;
+                    }
+                    if (tooltipY + tooltipHeight > window.innerHeight) {
+                        tooltipY = event.pageY - tooltipHeight - 15;
+                    }
+
                     d3.select("#tooltip")
-                        .style("left", (event.pageX + 15) + "px")
-                        .style("top", (event.pageY - 28) + "px")
+                        .style("left", tooltipX + "px")
+                        .style("top", tooltipY + "px")
                         .html(`<strong>${d.properties.NAME_1}</strong><br>${formattedDetails}`)
                         .transition()
                         .duration(200)
@@ -66,12 +80,25 @@ const initMap = () => {
                 }
             })
             .on("mousemove", function(event) {
+                // Recalculer la position de l'infobulle pour qu'elle reste toujours visible lors du déplacement de la souris
+                let tooltipX = event.pageX + 15;
+                let tooltipY = event.pageY - 28;
+                const tooltipWidth = 200; // Largeur estimée de l'infobulle
+                const tooltipHeight = 100; // Hauteur estimée de l'infobulle
+
+                if (tooltipX + tooltipWidth > window.innerWidth) {
+                    tooltipX = event.pageX - tooltipWidth - 15;
+                }
+                if (tooltipY + tooltipHeight > window.innerHeight) {
+                    tooltipY = event.pageY - tooltipHeight - 15;
+                }
+
                 d3.select("#tooltip")
-                    .style("left", (event.pageX + 15) + "px")
-                    .style("top", (event.pageY - 28) + "px");
+                    .style("left", tooltipX + "px")
+                    .style("top", tooltipY + "px");
             })
             .on("mouseout", function(event, d) {
-                d3.select(this).style("fill-opacity", 1);
+                d3.select(this).style("stroke", "#ffffff").style("stroke-width", "1.5");
                 d3.select("#tooltip").transition().duration(500).style("opacity", 0);
             })
             .on("click", function(event, d) {
@@ -125,4 +152,3 @@ initMap();
 
 // Réinitialiser la carte lors du redimensionnement de la fenêtre
 window.addEventListener("resize", initMap);
-
