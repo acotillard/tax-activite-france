@@ -50,6 +50,33 @@ app.post('/regions/:id/update', (req, res) => {
     res.json({ success: true });
 });
 
+// Endpoint pour récupérer toutes les activités (pour l'autocomplétion)
+app.get('/activities', (req, res) => {
+    const activities = db.prepare('SELECT name FROM Activities').all();
+    res.json(activities);
+});
+
+// Endpoint pour ajouter une nouvelle activité à une région
+app.post('/regions/:id/add-activity', (req, res) => {
+    const { activity, rate } = req.body;
+    const regionId = req.params.id;
+
+    let activityId = db.prepare('SELECT id FROM Activities WHERE name = ?').get(activity)?.id;
+
+    if (!activityId) {
+        // Ajouter la nouvelle activité si elle n'existe pas
+        const insertActivity = db.prepare('INSERT INTO Activities (name, description) VALUES (?, ?)');
+        const info = insertActivity.run(activity, `${activity} activities description.`);
+        activityId = info.lastInsertRowid;
+    }
+
+    // Ajouter la taxe associée à l'activité et à la région
+    const insertTax = db.prepare('INSERT INTO Taxes (rate, activity_id, region_id) VALUES (?, ?, ?)');
+    insertTax.run(rate, activityId, regionId);
+
+    res.json({ success: true });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

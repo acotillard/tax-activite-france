@@ -23,7 +23,7 @@ db.prepare(`
 db.prepare(`
     CREATE TABLE IF NOT EXISTS Taxes (
         id INTEGER PRIMARY KEY,
-        name TEXT UNIQUE NOT NULL,
+        name TEXT UNIQUE,
         rate REAL NOT NULL,
         activity_id INTEGER NOT NULL,
         region_id INTEGER NOT NULL,
