@@ -47,13 +47,19 @@
                 <label class="block text-gray-700 text-sm font-bold mb-1" for="new-activity">Activité:</label>
                 <input id="new-activity" name="new-activity" list="activities-list" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                 <datalist id="activities-list"></datalist>
+                <p id="activity-warning" class="hidden text-red-500 text-sm">Cette activité est déjà utilisée.</p>
             </div>
             <div class="mb-2">
                 <label class="block text-gray-700 text-sm font-bold mb-1" for="new-rate">Taux:</label>
                 <input id="new-rate" name="new-rate" type="number" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
-            <button type="submit" class="bg-green-500 text-white px-3 py-2 rounded-md">Ajouter</button>
+            <button type="button" id="add-activity-btn" class="bg-green-500 text-white px-3 py-2 rounded-md">Ajouter</button>
         </form>
+
+        <div id="new-activities" class="hidden mt-4">
+            <h2 class="text-2xl font-bold">Nouvelles activités à ajouter</h2>
+            <div id="new-activities-list"></div>
+        </div>
     </div>
 
     <script src="region.js"></script>

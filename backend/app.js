@@ -4,7 +4,7 @@ const app = express();
 const db = new Database('tax_activite_france.db', { verbose: console.log });
 
 app.use(express.json());
-app.use(express.static('../frontend'));  // Assurez-vous que le frontend est servi statiquement
+app.use(express.static('../frontend'));
 
 // Endpoint pour obtenir les régions avec leurs GeoJSON
 app.get('/regions', (req, res) => {
@@ -73,6 +73,21 @@ app.post('/regions/:id/add-activity', (req, res) => {
     // Ajouter la taxe associée à l'activité et à la région
     const insertTax = db.prepare('INSERT INTO Taxes (rate, activity_id, region_id) VALUES (?, ?, ?)');
     insertTax.run(rate, activityId, regionId);
+
+    res.json({ success: true });
+});
+
+// Endpoint pour supprimer une activité d'une région
+app.post('/regions/:id/delete-activity', (req, res) => {
+    const { activity } = req.body;
+    const regionId = req.params.id;
+
+    const activityId = db.prepare('SELECT id FROM Activities WHERE name = ?').get(activity)?.id;
+
+    if (activityId) {
+        const deleteTax = db.prepare('DELETE FROM Taxes WHERE region_id = ? AND activity_id = ?');
+        deleteTax.run(regionId, activityId);
+    }
 
     res.json({ success: true });
 });
