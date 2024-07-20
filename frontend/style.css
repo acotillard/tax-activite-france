@@ -9,7 +9,7 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: calc(100vh - 64px); /* Ajuster la hauteur pour prendre en compte le menu de navigation */
     width: 100%;
 }
 
