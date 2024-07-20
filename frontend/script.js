@@ -33,7 +33,7 @@ const initMap = () => {
     };
 
     // Liste des couleurs claires
-    const colors = ["#ffcccb", "#ffb6c1", "#ffefd5", "#ffe4e1", "#fafad2", "#e0ffff", "#afeeee", "#db7093", "#dda0dd", "#98fb98", "#ffdab9", "#ffdead", "#f5deb3", "#d8bfd8", "#ff6347", "#f4a460", "#fffacd", "#e6e6fa"];
+    const colors = ["#add8e6", "#90ee90", "#d3d3d3", "#ffb6c1", "#ffcccb", "#dda0dd", "#e0ffff", "#afeeee", "#db7093", "#f0e68c", "#ff6347", "#ffdead", "#98fb98", "#e6e6fa", "#b0e0e6", "#f5f5f5", "#d8bfd8", "#fafad2"];
 
     // Charger les données GeoJSON
     d3.json("gadm41_FRA_1.json").then(data => {

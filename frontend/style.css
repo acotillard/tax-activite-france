@@ -22,6 +22,7 @@ html, body {
 
 .region {
     cursor: pointer;
+    transition: stroke-width 0.2s, stroke 0.2s;
 }
 
 .label {
@@ -40,4 +41,10 @@ html, body {
     border: 0px;
     border-radius: 8px;
     pointer-events: none;
+}
+
+.region:hover {
+    stroke: gold;
+    stroke-width: 3px;
+    filter: drop-shadow(0 0 5px gold);
 }
