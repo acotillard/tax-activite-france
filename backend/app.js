@@ -12,6 +12,16 @@ app.get('/regions', (req, res) => {
     res.json(regions);
 });
 
+// Endpoint pour obtenir les informations d'une région spécifique
+app.get('/regions/:id', (req, res) => {
+    const region = db.prepare('SELECT * FROM Regions WHERE id = ?').get(req.params.id);
+    if (region) {
+        res.json(region);
+    } else {
+        res.status(404).send('Region not found');
+    }
+});
+
 // Endpoint pour obtenir les activités et taxes d'une région spécifique
 app.get('/regions/:id/details', (req, res) => {
     const details = db.prepare(`
@@ -21,6 +31,23 @@ app.get('/regions/:id/details', (req, res) => {
         WHERE t.region_id = ?
     `).all(req.params.id);
     res.json(details);
+});
+
+// Endpoint pour mettre à jour les activités et taxes d'une région spécifique
+app.post('/regions/:id/update', (req, res) => {
+    const { updates } = req.body;
+    const regionId = req.params.id;
+
+    const updateTax = db.prepare(`
+        UPDATE Taxes SET rate = ?
+        WHERE region_id = ? AND activity_id = (SELECT id FROM Activities WHERE name = ?)
+    `);
+
+    updates.forEach(update => {
+        updateTax.run(update.rate, regionId, update.activity);
+    });
+
+    res.json({ success: true });
 });
 
 const PORT = process.env.PORT || 3000;

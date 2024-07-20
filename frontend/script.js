@@ -50,7 +50,6 @@ const initMap = () => {
                 d3.select(this).style("fill-opacity", 0.7);
                 try {
                     const regionId = data.features.findIndex(feature => feature.properties.NAME_1 === d.properties.NAME_1) + 1;
-                    console.log(`Fetching details for region ID: ${regionId}`);
                     const detailsResponse = await fetch(`/regions/${regionId}/details`);
                     const details = await detailsResponse.json();
                     const formattedDetails = formatDetails(details);
@@ -74,6 +73,29 @@ const initMap = () => {
             .on("mouseout", function(event, d) {
                 d3.select(this).style("fill-opacity", 1);
                 d3.select("#tooltip").transition().duration(500).style("opacity", 0);
+            })
+            .on("click", function(event, d) {
+                // Zoom sur la région sélectionnée
+                const [[x0, y0], [x1, y1]] = path.bounds(d);
+                const dx = x1 - x0;
+                const dy = y1 - y0;
+                const x = (x0 + x1) / 2;
+                const y = (y0 + y1) / 2;
+                const scale = Math.min(8, 0.9 / Math.max(dx / width, dy / height));
+                const translate = [width / 2 - scale * x, height / 2 - scale * y];
+                
+                svg.transition()
+                    .duration(750)
+                    .call(
+                        d3.zoom().transform,
+                        d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale)
+                    );
+
+                // Rediriger vers la page de la région après l'animation
+                setTimeout(() => {
+                    const regionId = data.features.findIndex(feature => feature.properties.NAME_1 === d.properties.NAME_1) + 1;
+                    window.location.href = `/region.html?id=${regionId}`;
+                }, 750);
             })
             .append("title")
             .text(d => d.properties.NAME_1);
@@ -103,3 +125,4 @@ initMap();
 
 // Réinitialiser la carte lors du redimensionnement de la fenêtre
 window.addEventListener("resize", initMap);
+
